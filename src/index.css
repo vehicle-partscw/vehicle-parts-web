@@ -1,0 +1,298 @@
+/* ═══════ GLOBAL CSS — Matches autoparts-v3.html prototype EXACTLY ═══════ */
+
+:root {
+  /* Terra cotta accent scale — from prototype */
+  --accent-1: #FFFCFC;
+  --accent-2: #FFF8F7;
+  --accent-3: #FEEBE7;
+  --accent-4: #FFDCD3;
+  --accent-5: #FFCDC2;
+  --accent-6: #FDBDAF;
+  --accent-7: #F5A898;
+  --accent-8: #EC8E7B;
+  --accent-9: #E54D2E;
+  --accent-10: #DD4425;
+  --accent-11: #D13415;
+  --accent-12: #5C271F;
+
+  /* Warm neutral scale — from prototype (terra cotta tinted) */
+  --neutral-1: #FFFFFF;
+  --neutral-2: #FFF8F7;
+  --neutral-3: #FEEBE7;
+  --neutral-4: #FFDCD3;
+  --neutral-5: #E8DDD9;
+  --neutral-6: #D4C8C3;
+  --neutral-7: #BDB0AA;
+  --neutral-8: #A3948D;
+  --neutral-9: #857872;
+  --neutral-10: #665B56;
+  --neutral-11: #44302B;
+  --neutral-12: #1A0F0C;
+
+  /* Semantic */
+  --canvas: #FFF8F7;
+  --sidebar-bg: #FFFCFC;
+  --success: #30A46C;
+  --success-bg: #E9F9EE;
+  --warning: #E5A000;
+  --warning-bg: #FFF8C6;
+  --error: #E5484D;
+  --error-bg: #FFEFEF;
+  --info: #0091FF;
+  --info-bg: #EDF6FF;
+
+  /* Shadows — from prototype */
+  --shadow-card: 5px 5px 0px 0px rgba(0, 0, 0, 0.85);
+  --shadow-card-hover: 6px 6px 0px 0px rgba(0, 0, 0, 0.9);
+  --shadow-heavy: 7px 7px 0px 0px rgba(0, 0, 0, 0.9);
+  --shadow-modal: 8px 8px 0px 0px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 3px 3px 0px 0px rgba(0, 0, 0, 0.8);
+  --shadow-subtle: 3px 3px 0 0 rgba(92, 39, 31, 0.2);
+  --shadow-subtle-hover: 4px 4px 0 0 rgba(92, 39, 31, 0.3);
+  --shadow-subtle-strong: 3px 3px 0 0 rgba(92, 39, 31, 0.35);
+  --shadow-focus: 3px 3px 0 0 rgba(0, 0, 0, 0.15);
+  --shadow-focus-accent: 4px 4px 0 0 rgba(229, 77, 46, 0.25);
+  --divider-color: rgba(92, 39, 31, 0.2);
+
+  /* Typography */
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-heading: 'Playfair Display', serif;
+
+  /* Spacing */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+
+  --border-radius-sm: 8px;
+  --border-radius: 12px;
+  --border-radius-lg: 16px;
+
+  --transition: all 0.2s ease-in-out;
+}
+
+/* ═══════ DARK MODE — from prototype ═══════ */
+[data-theme="dark"] {
+  --accent-1: #181111;
+  --accent-2: #1F1513;
+  --accent-3: #391714;
+  --accent-4: #4E1511;
+  --accent-5: #5E1C16;
+  --accent-6: #6E2920;
+  --accent-7: #853A2D;
+  --accent-8: #AC4D39;
+  --accent-9: #E54D2E;
+  --accent-10: #EC6142;
+  --accent-11: #FF977D;
+  --accent-12: #FBD3CB;
+
+  --neutral-1: #1F1513;
+  --neutral-2: #261B18;
+  --neutral-3: #32241F;
+  --neutral-4: #3E2E28;
+  --neutral-5: #4E3B34;
+  --neutral-6: #5E4A42;
+  --neutral-7: #7A6960;
+  --neutral-8: #9A8880;
+  --neutral-9: #B5A79F;
+  --neutral-10: #CFBFB8;
+  --neutral-11: #E8DDD9;
+  --neutral-12: #FBF5F3;
+
+  --canvas: #181111;
+  --sidebar-bg: #1F1513;
+  --success-bg: #1a3a2a;
+  --warning-bg: #4a3a1a;
+  --error-bg: #4a1a1f;
+  --info-bg: #1a2a4a;
+
+  --shadow-card: 5px 5px 0px 0px rgba(255, 255, 255, 0.7);
+  --shadow-card-hover: 6px 6px 0px 0px rgba(255, 255, 255, 0.8);
+  --shadow-heavy: 7px 7px 0px 0px rgba(255, 255, 255, 0.75);
+  --shadow-modal: 8px 8px 0px 0px rgba(255, 255, 255, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --shadow-sm: 3px 3px 0px 0px rgba(255, 255, 255, 0.6);
+  --shadow-subtle: 3px 3px 0 0 rgba(255, 255, 255, 0.2);
+  --shadow-subtle-hover: 4px 4px 0 0 rgba(255, 255, 255, 0.3);
+  --shadow-subtle-strong: 3px 3px 0 0 rgba(255, 255, 255, 0.35);
+  --shadow-focus: 3px 3px 0 0 rgba(255, 255, 255, 0.15);
+  --shadow-focus-accent: 4px 4px 0 0 rgba(229, 77, 46, 0.4);
+  --divider-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ═══════ BASE STYLES ═══════ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--neutral-12);
+  background-color: var(--canvas);
+  margin: 0;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ═══════ TYPOGRAPHY ═══════ */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--neutral-12);
+}
+
+p { margin-bottom: var(--spacing-4); }
+a { color: var(--accent-9); text-decoration: none; transition: var(--transition); }
+a:hover { text-decoration: underline; }
+
+/* ═══════ BUTTONS — Global reset to match prototype .btn ═══════ */
+button, [role="button"], input[type="submit"], input[type="reset"], input[type="button"] {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 2px solid var(--neutral-12);
+  border-radius: 12px;
+  padding: 0 20px;
+  height: 40px;
+  background-color: var(--neutral-12);
+  color: var(--neutral-1);
+  transition: all 0.15s;
+  box-shadow: var(--shadow-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+button:hover, [role="button"]:hover, input[type="submit"]:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-card);
+}
+
+button:active {
+  transform: translate(0, 0);
+  box-shadow: var(--shadow-sm);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ═══════ FORM ELEMENTS ═══════ */
+input, textarea, select {
+  font-family: var(--font-body);
+  font-size: 14px;
+  border: 2px solid var(--neutral-5);
+  border-radius: 12px;
+  padding: 0 14px;
+  height: 44px;
+  background-color: var(--neutral-1);
+  color: var(--neutral-12);
+  transition: all 0.2s;
+  line-height: 20px;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--neutral-12);
+  box-shadow: var(--shadow-focus);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--accent-8);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+  padding: 10px 14px;
+  height: auto;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--neutral-11);
+  line-height: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.form-group { margin-bottom: 18px; }
+.error-message { color: var(--error); font-size: 12px; margin-top: 4px; display: block; }
+
+/* ═══════ BADGE — from prototype ═══════ */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 16px;
+  border: 1.5px solid transparent;
+}
+
+.badge-success { background: var(--success-bg); color: var(--success); border-color: var(--success); }
+.badge-error { background: var(--error-bg); color: var(--error); border-color: var(--error); }
+.badge-warning { background: var(--warning-bg); color: var(--warning); border-color: var(--warning); }
+.badge-info { background: var(--info-bg); color: var(--info); border-color: var(--info); }
+
+/* ═══════ CARD — from prototype ═══════ */
+.card {
+  background: var(--neutral-1);
+  padding: 26px;
+  border-radius: 16px;
+  border: 2px solid var(--neutral-12);
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-card);
+}
+
+.card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ═══════ SCROLLBAR ═══════ */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: var(--neutral-5); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background-color: var(--neutral-7); }
+
+/* ═══════ SPINNER ═══════ */
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--accent-3);
+  border-top-color: var(--accent-9);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

@@ -1,0 +1,189 @@
+/* ═══════ TOPBAR — Matches autoparts-v3.html prototype exactly ═══════ */
+
+.topbar {
+  background: var(--sidebar-bg);
+  border-bottom: 2px solid var(--accent-12);
+  padding: 0 44px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+/* Search */
+.topbar .search-bar {
+  flex: 1;
+  max-width: 420px;
+  position: relative;
+}
+
+.topbar .search-bar svg {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 17px;
+  height: 17px;
+  color: var(--accent-8);
+  pointer-events: none;
+}
+
+.topbar .search-bar input {
+  width: 100%;
+  padding: 10px 16px 10px 42px;
+  border: 2px solid var(--accent-12);
+  border-radius: 14px;
+  font-size: 14px;
+  background: var(--neutral-1);
+  color: var(--neutral-12);
+  height: 44px;
+  font-family: inherit;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-subtle);
+}
+
+.topbar .search-bar input:focus {
+  outline: none;
+  border-color: var(--accent-9);
+  box-shadow: 0 0 0 3px rgba(229, 77, 46, 0.15);
+}
+
+.topbar .search-bar input::placeholder {
+  color: var(--accent-8);
+}
+
+/* Right side */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Buttons */
+.topbar-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 2px solid var(--accent-12) !important;
+  background: var(--neutral-1) !important;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-12);
+  transition: all 0.15s;
+  position: relative;
+  box-shadow: var(--shadow-subtle) !important;
+  padding: 0;
+  transform: none !important;
+}
+
+.topbar-btn:hover {
+  background: var(--accent-3) !important;
+  color: var(--accent-9);
+  transform: translate(-1px, -1px) !important;
+  box-shadow: var(--shadow-subtle-hover) !important;
+}
+
+.topbar-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Notification dot */
+.notif-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  background: var(--accent-9);
+  border-radius: 50%;
+  border: 2px solid var(--neutral-1);
+}
+
+/* Divider */
+.topbar-divider {
+  width: 2px;
+  height: 28px;
+  background: var(--neutral-5);
+  margin: 0 8px;
+  border-radius: 1px;
+}
+
+/* Role pill */
+.role-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--neutral-1);
+  padding: 5px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  height: 40px;
+  border: 2px solid var(--accent-12);
+  box-shadow: var(--shadow-subtle);
+}
+
+.role-pill-label {
+  color: var(--accent-12);
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.role-pill-value {
+  color: var(--accent-9);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* Avatar */
+.topbar-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-7), var(--accent-9));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+  border: 2px solid var(--accent-12);
+  box-shadow: var(--shadow-subtle-strong);
+}
+
+/* Dark mode */
+[data-theme="dark"] .topbar {
+  border-bottom-color: var(--accent-8);
+}
+
+[data-theme="dark"] .topbar .search-bar input {
+  background: var(--neutral-2);
+  border-color: var(--accent-8);
+}
+
+[data-theme="dark"] .topbar-btn {
+  border-color: var(--accent-8) !important;
+  background: var(--neutral-2) !important;
+}
+
+[data-theme="dark"] .topbar-btn:hover {
+  background: var(--accent-3) !important;
+}
+
+[data-theme="dark"] .role-pill {
+  border-color: var(--accent-8);
+  background: var(--neutral-2);
+}
+
+[data-theme="dark"] .topbar-avatar {
+  border-color: var(--accent-11);
+  box-shadow: 2px 2px 0 0 rgba(255, 255, 255, 0.5);
+}
