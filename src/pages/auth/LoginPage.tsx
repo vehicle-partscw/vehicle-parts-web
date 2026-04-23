@@ -291,7 +291,7 @@ const LoginPage = () => {
                   <input
                     className="form-input"
                     type="text"
-                    placeholder="John Doe"
+                    placeholder="Your full name"
                     {...registerSignup('fullName')}
                   />
                   {registerErrors.fullName && (
@@ -304,7 +304,7 @@ const LoginPage = () => {
                   <input
                     className="form-input"
                     type="email"
-                    placeholder="your@email.com"
+                    placeholder="Your email address"
                     {...registerSignup('email')}
                   />
                   {registerErrors.email && (
