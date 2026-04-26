@@ -321,16 +321,33 @@
 }
 
 .login-forgot {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  height: auto !important;
+  font-family: inherit;
   font-size: 12px;
-  color: var(--accent-9);
+  color: var(--accent-9) !important;
   text-decoration: none;
   font-weight: 600;
   line-height: 16px;
   cursor: pointer;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 .login-forgot:hover {
   text-decoration: underline;
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--accent-11) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+.login-forgot:active {
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 /* Submit button */
@@ -561,3 +578,5 @@
     padding: 24px;
   }
 }
+
+/* (login-google-wrap styles removed — we now use the custom .login-social-btn directly) */

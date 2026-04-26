@@ -6,21 +6,34 @@ import { z } from 'zod';
 import { toast } from 'sonner';
 import api from '../../lib/api';
 import { useAuthStore } from '../../stores/authStore';
+import { useGoogleLogin } from '@react-oauth/google';
 import logoSvg from '../../assets/logo.svg';
+import ForgotPasswordModal from '../../components/shared/ForgotPasswordModal';
 import './AuthPages.css';
 
 /* ── Schemas ── */
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  email: z.string()
+    .min(1, 'Email is required')
+    .regex(EMAIL_RE, 'Enter a valid email address'),
   password: z.string().min(1, 'Password is required'),
 });
 
 const registerSchema = z
   .object({
-    fullName: z.string().min(2, 'Full name must be at least 2 characters'),
-    email: z.string().email('Invalid email address'),
-    password: z.string().min(10, 'Password must be at least 10 characters'),
-    confirmPassword: z.string(),
+    fullName: z.string()
+      .min(2, 'Full name must be at least 2 characters')
+      .max(120, 'That name is too long'),
+    email: z.string()
+      .min(1, 'Email is required')
+      .regex(EMAIL_RE, 'Enter a valid email address'),
+    password: z.string()
+      .min(10, 'Password must be at least 10 characters')
+      .regex(/[A-Za-z]/, 'Password must contain at least one letter')
+      .regex(/[0-9]/, 'Password must contain at least one number'),
+    confirmPassword: z.string().min(1, 'Please confirm your password'),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -35,7 +48,9 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
   const [activeTab, setActiveTab] = useState<'signin' | 'register'>('signin');
+  const [forgotOpen, setForgotOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const lottieRef = useRef<HTMLDivElement>(null);
 
   /* Load Lottie animation dynamically */
@@ -68,9 +83,12 @@ const LoginPage = () => {
     register: registerLogin,
     handleSubmit: handleLoginSubmit,
     formState: { errors: loginErrors },
+    watch: watchLogin,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
+    mode: 'onTouched',
   });
+  const loginEmailValue = watchLogin('email') ?? '';
 
   /* Register form */
   const {
@@ -79,6 +97,36 @@ const LoginPage = () => {
     formState: { errors: registerErrors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
+    mode: 'onTouched',
+  });
+
+  const handleGoogleAuth = useGoogleLogin({
+    flow: 'auth-code',
+    onSuccess: async ({ code }) => {
+      setIsLoading(true);
+      try {
+        const res = await api.post('/auth/google', { code });
+        const { accessToken, refreshToken } = res.data;
+        login(accessToken, refreshToken, rememberMe);
+        toast.success('Signed in with Google.');
+        navigate('/dashboard');
+      } catch (error: any) {
+        const data = error.response?.data;
+        const errors = data?.errors;
+        let message = 'Google sign-in failed.';
+        if (errors && typeof errors === 'object' && !Array.isArray(errors)) {
+          message = Object.values(errors).flat().join(' ');
+        } else if (Array.isArray(errors) && errors.length > 0) {
+          message = errors[0];
+        } else if (data?.detail) {
+          message = data.detail;
+        }
+        toast.error(message);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    onError: () => toast.error('Google sign-in was cancelled or failed.'),
   });
 
   const onLogin = async (data: LoginFormData) => {
@@ -87,7 +135,7 @@ const LoginPage = () => {
       const response = await api.post('/auth/login', data);
       const { accessToken, refreshToken } = response.data;
       // API doesn't return a user object — the store decodes it from the JWT
-      login(accessToken, refreshToken);
+      login(accessToken, refreshToken, rememberMe);
       toast.success('Logged in successfully!');
       navigate('/dashboard');
     } catch (error: any) {
@@ -118,7 +166,7 @@ const LoginPage = () => {
         confirmPassword: data.confirmPassword,
       });
       const { accessToken, refreshToken } = response.data;
-      login(accessToken, refreshToken);
+      login(accessToken, refreshToken, true);
       toast.success('Account created successfully!');
       navigate('/dashboard');
     } catch (error: any) {
@@ -242,10 +290,20 @@ const LoginPage = () => {
 
                 <div className="login-form-options">
                   <label className="login-remember">
-                    <input type="checkbox" defaultChecked />
+                    <input
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                    />
                     Remember me
                   </label>
-                  <a className="login-forgot">Forgot password?</a>
+                  <button
+                    type="button"
+                    className="login-forgot"
+                    onClick={() => setForgotOpen(true)}
+                  >
+                    Forgot password?
+                  </button>
                 </div>
 
                 <button type="submit" disabled={isLoading} className="login-submit-btn">
@@ -262,11 +320,16 @@ const LoginPage = () => {
 
               <div className="login-social-divider">
                 <p>Or continue with</p>
-                <button type="button" className="login-social-btn">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z" />
+                <button
+                  type="button"
+                  className="login-social-btn"
+                  onClick={() => handleGoogleAuth()}
+                  disabled={isLoading}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M21.35 11.1H12v3.83h5.34c-.49 2.4-2.5 3.83-5.34 3.83-3.18 0-5.78-2.6-5.78-5.78s2.6-5.78 5.78-5.78c1.43 0 2.7.51 3.7 1.36l2.88-2.88C16.85 4.07 14.6 3 12 3 6.97 3 3 6.97 3 12s3.97 9 9 9c5.2 0 8.6-3.66 8.6-8.79 0-.59-.07-1.17-.25-1.71z"/>
                   </svg>
-                  Google
+                  Continue with Google
                 </button>
               </div>
 
@@ -358,6 +421,16 @@ const LoginPage = () => {
           )}
         </div>
       </div>
+
+      <ForgotPasswordModal
+        open={forgotOpen}
+        onClose={() => setForgotOpen(false)}
+        initialEmail={loginEmailValue}
+        onRegister={() => {
+          setForgotOpen(false);
+          setActiveTab('register');
+        }}
+      />
     </div>
   );
 };
