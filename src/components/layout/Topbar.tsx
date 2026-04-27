@@ -1,23 +1,162 @@
-import { Moon, Sun, Bell } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
+import { Moon, Sun, Bell, LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useThemeStore } from '../../stores/themeStore';
 import { useAuthStore } from '../../stores/authStore';
+import api from '../../lib/api';
+import GlobalSearchModal from '../shared/GlobalSearchModal';
 import './Topbar.css';
+
+interface Notification {
+  id: string;
+  type: string;
+  title: string;
+  body: string;
+  relatedEntityName: string | null;
+  relatedEntityId: string | null;
+  readAt: string | null;
+  createdAt: string;
+}
+
+interface PagedResult<T> {
+  items: T[]; page: number; pageSize: number; totalCount: number;
+  totalPages: number; hasPrevious: boolean; hasNext: boolean;
+}
+
+const POLL_MS = 60_000; // refresh unread count every minute
 
 const Topbar = () => {
   const { theme, toggleTheme } = useThemeStore();
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
+  const navigate = useNavigate();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [recent, setRecent] = useState<Notification[]>([]);
+  const [loadingNotifs, setLoadingNotifs] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const isStaff = user?.role === 'Staff' || user?.role === 'Admin';
+
+  const onSignOut = () => {
+    if (!window.confirm('Sign out of AutoParts?')) return;
+    logout();
+    toast.success('Signed out.');
+    navigate('/login', { replace: true });
+  };
+
+  // poll unread count
+  useEffect(() => {
+    let alive = true;
+    const fetchCount = async () => {
+      try {
+        const res = await api.get<{ count: number }>('/me/notifications/unread-count');
+        if (alive) setUnreadCount(res.data.count ?? 0);
+      } catch {
+        // silent — bell just shows whatever we have
+      }
+    };
+    fetchCount();
+    const t = setInterval(fetchCount, POLL_MS);
+    return () => { alive = false; clearInterval(t); };
+  }, []);
+
+  // close notif dropdown on outside click
+  useEffect(() => {
+    if (!notifOpen) return;
+    const onDoc = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setNotifOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onDoc);
+    return () => document.removeEventListener('mousedown', onDoc);
+  }, [notifOpen]);
+
+
+  const openNotifications = async () => {
+    if (!notifOpen) {
+      setLoadingNotifs(true);
+      try {
+        const res = await api.get<PagedResult<Notification>>('/me/notifications', {
+          params: { page: 1, pageSize: 8 },
+        });
+        setRecent(res.data.items ?? []);
+      } catch {
+        setRecent([]);
+      } finally {
+        setLoadingNotifs(false);
+      }
+    }
+    setNotifOpen((v) => !v);
+  };
+
+  const markOneRead = async (n: Notification) => {
+    if (!n.readAt) {
+      try {
+        await api.patch(`/me/notifications/${n.id}/read`);
+        setUnreadCount((c) => Math.max(0, c - 1));
+        setRecent((rs) => rs.map((r) => r.id === n.id ? { ...r, readAt: new Date().toISOString() } : r));
+      } catch {
+        // ignore
+      }
+    }
+    // route based on entity + viewer role
+    if (n.relatedEntityName === 'Part') {
+      // a part-related notification for the customer means "your requested part is sourced".
+      // customers should never land on /inventory, so route them to their own requests page.
+      navigate(isStaff ? `/inventory?search=${encodeURIComponent(n.relatedEntityId ?? '')}` : '/part-requests');
+    } else if (n.relatedEntityName === 'PartRequest') {
+      navigate('/part-requests');
+    } else if (n.type === 'AppointmentReminder') {
+      navigate('/appointments');
+    } else if (n.type === 'LowStock') {
+      navigate(isStaff ? '/inventory' : '/dashboard');
+    } else if (n.type === 'OverdueCredit') {
+      navigate(isStaff ? '/customer-reports' : '/my-history');
+    }
+    setNotifOpen(false);
+  };
+
+  const markAllRead = async () => {
+    try {
+      await api.patch('/me/notifications/read-all');
+      setUnreadCount(0);
+      const now = new Date().toISOString();
+      setRecent((rs) => rs.map((r) => r.readAt ? r : { ...r, readAt: now }));
+    } catch {
+      // ignore
+    }
+  };
+
+  const fmtAgo = (iso: string) => {
+    const ms = Date.now() - new Date(iso).getTime();
+    const m = Math.floor(ms / 60_000);
+    if (m < 1) return 'just now';
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    const d = Math.floor(h / 24);
+    if (d < 7) return `${d}d ago`;
+    return new Date(iso).toLocaleDateString('en', { month: 'short', day: 'numeric' });
+  };
 
   return (
     <div className="topbar">
-      {/* Search */}
-      <div className="search-bar">
+      <button
+        type="button"
+        className="search-trigger"
+        onClick={() => setSearchOpen(true)}
+        aria-label="Open search"
+      >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" placeholder="Search parts, customers, orders..." />
-      </div>
+        <span className="search-trigger-placeholder">
+          {isStaff ? 'Search parts, customers, vehicles, vendors…' : 'Search parts…'}
+        </span>
+      </button>
 
-      {/* Right side */}
       <div className="topbar-right">
-        {/* Role pill — display only, no dropdown */}
         <div className="role-pill">
           <span className="role-pill-label">Role:</span>
           <span className="role-pill-value">{user?.role || 'User'}</span>
@@ -25,30 +164,65 @@ const Topbar = () => {
 
         <div className="topbar-divider" />
 
-        {/* Theme toggle */}
         <button className="topbar-btn" onClick={toggleTheme} title="Toggle theme">
-          {theme === 'light' ? (
-            <Moon size={18} />
-          ) : (
-            <Sun size={18} />
-          )}
+          {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
         </button>
 
-        {/* Notifications */}
-        <div style={{ position: 'relative' }}>
-          <button className="topbar-btn" title="Notifications">
+        <div className="notif-wrap" ref={dropdownRef}>
+          <button className="topbar-btn" title="Notifications" onClick={openNotifications} aria-label="Notifications">
             <Bell size={18} />
-            <span className="notif-dot" />
+            {unreadCount > 0 && (
+              <span className="notif-badge">{unreadCount > 9 ? '9+' : unreadCount}</span>
+            )}
           </button>
+
+          {notifOpen && (
+            <div className="notif-dropdown">
+              <div className="notif-dropdown-header">
+                <span className="notif-dropdown-title">Notifications</span>
+                {unreadCount > 0 && (
+                  <button className="notif-link" onClick={markAllRead}>Mark all read</button>
+                )}
+              </div>
+
+              {loadingNotifs ? (
+                <div className="notif-empty">Loading…</div>
+              ) : recent.length === 0 ? (
+                <div className="notif-empty">You're all caught up.</div>
+              ) : (
+                <ul className="notif-list">
+                  {recent.map((n) => (
+                    <li
+                      key={n.id}
+                      className={n.readAt ? 'notif-item' : 'notif-item unread'}
+                      onClick={() => markOneRead(n)}
+                    >
+                      <div className="notif-item-row">
+                        <span className="notif-item-title">{n.title}</span>
+                        <span className="notif-item-time">{fmtAgo(n.createdAt)}</span>
+                      </div>
+                      <div className="notif-item-body">{n.body}</div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="topbar-divider" />
 
-        {/* Avatar */}
-        <div className="topbar-avatar" title={user?.fullName}>
-          {user?.fullName ? user.fullName[0].toUpperCase() : 'U'}
-        </div>
+        <button
+          className="topbar-btn topbar-btn-signout"
+          onClick={onSignOut}
+          title={`Sign out${user?.fullName ? ` (${user.fullName})` : ''}`}
+          aria-label="Sign out"
+        >
+          <LogOut size={18} />
+        </button>
       </div>
+
+      <GlobalSearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
   );
 };
