@@ -1,4 +1,4 @@
-/* ═══════ SIDEBAR — Matches autoparts-v3.html prototype exactly ═══════ */
+/* sidebar - matches autoparts-v3.html prototype exactly */
 
 .sidebar {
   width: 250px;
@@ -50,7 +50,7 @@
   justify-content: flex-start;
   gap: 22px;
   padding: 14px 14px 14px;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .nav-label {

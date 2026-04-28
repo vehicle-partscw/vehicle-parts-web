@@ -99,7 +99,7 @@ const Sidebar = () => {
     {
       sectionLabel: 'System',
       items: [
-        { label: 'Settings', path: '/settings', icon: 'settings', show: true },
+        { label: isCustomer ? 'My Profile' : 'Settings', path: '/settings', icon: 'settings', show: true },
       ],
     },
   ];
@@ -148,7 +148,11 @@ const Sidebar = () => {
 
       {/* Footer */}
       <div className="sidebar-footer">
-        <div className="sidebar-user" onClick={handleLogout} title="Click to logout">
+        <div
+          className="sidebar-user"
+          onClick={() => navigate('/settings')}
+          title="Open profile and settings"
+        >
           <div className="sidebar-avatar">
             {user?.fullName ? user.fullName[0].toUpperCase() : 'U'}
           </div>
