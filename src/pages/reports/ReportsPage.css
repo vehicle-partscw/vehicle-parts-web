@@ -19,19 +19,34 @@
   box-shadow: var(--shadow-sm);
 }
 .reports-page .period-btn {
-  border: none;
-  background: transparent;
-  padding: 8px 18px;
+  border: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 8px 18px !important;
+  height: auto !important;
   font-size: 13px;
   font-weight: 700;
   color: var(--neutral-11);
   cursor: pointer;
   border-radius: 8px;
   font-family: inherit;
-  transition: all 120ms ease;
+  transition: background 120ms ease, color 120ms ease;
+  box-shadow: none !important;
+  transform: none !important;
 }
-.reports-page .period-btn.active { background: var(--accent-9); color: white; }
-.reports-page .period-btn:hover:not(.active) { background: var(--neutral-3); }
+.reports-page .period-btn:hover, .reports-page .period-btn:active {
+  transform: none !important;
+  box-shadow: none !important;
+}
+.reports-page .period-btn.active {
+  background: var(--accent-9) !important;
+  background-color: var(--accent-9) !important;
+  color: white;
+}
+.reports-page .period-btn:hover:not(.active) {
+  background: var(--neutral-3) !important;
+  background-color: var(--neutral-3) !important;
+}
 
 .reports-page .date-range { display: flex; gap: 12px; align-items: flex-end; }
 .reports-page .date-range label {

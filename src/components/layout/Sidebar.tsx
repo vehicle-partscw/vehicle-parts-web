@@ -99,7 +99,7 @@ const Sidebar = () => {
     {
       sectionLabel: 'System',
       items: [
-        { label: 'Settings', path: '/settings', icon: 'settings', show: true },
+        { label: isCustomer ? 'My Profile' : 'Settings', path: '/settings', icon: 'settings', show: true },
       ],
     },
   ];

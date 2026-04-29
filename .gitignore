@@ -74,3 +74,4 @@ dist-ssr
 /public/lottie-search-modal.json
 /public/lottie-teaching.json
 /public/lottie-vendors.json
+.vercel
