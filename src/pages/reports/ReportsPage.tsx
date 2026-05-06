@@ -101,8 +101,8 @@ const ReportsPage = () => {
     : 0;
 
   const trendCopy = report && report.totalSales > 0
-    ? `Sales of ${fmtMoney(report.totalSales)} across ${report.salesInvoiceCount} invoice${report.salesInvoiceCount === 1 ? '' : 's'} — gross margin sits at ${fmtPct(marginPct)}.`
-    : 'No sales recorded for this period yet — pick a wider range or start logging invoices.';
+    ? `Sales of ${fmtMoney(report.totalSales)} across ${report.salesInvoiceCount} invoice${report.salesInvoiceCount === 1 ? '' : 's'} - gross margin sits at ${fmtPct(marginPct)}.`
+    : 'No sales recorded for this period yet - pick a wider range or start logging invoices.';
 
   return (
     <div className="reports-page">
@@ -114,7 +114,7 @@ const ReportsPage = () => {
       <div className="hero">
         <div className="hero-text">
           <h2>Business Analytics</h2>
-          <p>Generate comprehensive reports to understand your business trends and make data-driven decisions.</p>
+          <p>Generate detailed reports to understand your business trends and make data-driven decisions.</p>
         </div>
         <div className="hero-illust">
           <div ref={lottieRef} className="lottie-hero hero-wide" aria-label="process animation" />
@@ -126,7 +126,7 @@ const ReportsPage = () => {
           <div className="stat-label">Total Revenue</div>
           <div className="stat-value">{report ? fmtMoney(report.totalSales) : 'Rs 0'}</div>
           <div className="stat-change">
-            {report ? `${report.salesInvoiceCount} invoice${report.salesInvoiceCount === 1 ? '' : 's'}` : '—'}
+            {report ? `${report.salesInvoiceCount} invoice${report.salesInvoiceCount === 1 ? '' : 's'}` : '-'}
           </div>
         </div>
         <div className="stat-card">
@@ -140,7 +140,7 @@ const ReportsPage = () => {
           <div className="stat-label">Total Purchases</div>
           <div className="stat-value">{report ? fmtMoney(report.totalPurchases) : 'Rs 0'}</div>
           <div className="stat-change">
-            {report ? `${report.purchaseInvoiceCount} invoice${report.purchaseInvoiceCount === 1 ? '' : 's'}` : '—'}
+            {report ? `${report.purchaseInvoiceCount} invoice${report.purchaseInvoiceCount === 1 ? '' : 's'}` : '-'}
           </div>
         </div>
         <div className="stat-card">
