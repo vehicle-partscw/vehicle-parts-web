@@ -11,8 +11,6 @@ node_modules
 dist
 dist-ssr
 *.local
-.env
-.env.local
 
 # Editor directories and files
 .vscode/*
@@ -24,56 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# local-only asset files
-/public/illust-automatic-*.svg
-/public/illust-balancing-*.svg
-/public/illust-communication-*.svg
-/public/illust-figuring-*.svg
-/public/illust-fragile-*.svg
-/public/illust-gethelp-*.svg
-/public/illust-handlecare-*.svg
-/public/illust-notification-*.svg
-/public/illust-overcome-*.svg
-/public/illust-progress-*.svg
-/public/illust-success-*.svg
-/public/illust-unboxing-*.svg
-/public/illust-warehouse-*.svg
-/public/lottie-appointments.json
-/public/lottie-contact.json
-/public/lottie-inventory.json
-/public/lottie-not-found.json
-/public/lottie-process.json
-/public/lottie-purchases.json
-/public/lottie-sales.json
-/public/lottie-search.json
-/public/lottie-search-modal.json
-/public/lottie-teaching.json
-/public/lottie-vendors.json
-
-# local-only asset files
-/public/illust-automatic-*.svg
-/public/illust-balancing-*.svg
-/public/illust-communication-*.svg
-/public/illust-figuring-*.svg
-/public/illust-fragile-*.svg
-/public/illust-gethelp-*.svg
-/public/illust-handlecare-*.svg
-/public/illust-notification-*.svg
-/public/illust-overcome-*.svg
-/public/illust-progress-*.svg
-/public/illust-success-*.svg
-/public/illust-unboxing-*.svg
-/public/illust-warehouse-*.svg
-/public/lottie-appointments.json
-/public/lottie-contact.json
-/public/lottie-inventory.json
-/public/lottie-not-found.json
-/public/lottie-process.json
-/public/lottie-purchases.json
-/public/lottie-sales.json
-/public/lottie-search.json
-/public/lottie-search-modal.json
-/public/lottie-teaching.json
-/public/lottie-vendors.json
-.vercel

@@ -1,45 +1,7 @@
-/* login / register - split-screen layout */
-
-/* Inline alert above the submit button. Shows the most recent API failure (e.g. wrong
-   password, email already registered, network down) so users don't miss a transient toast.
-   Auto-clears as soon as the user edits any field. */
-.auth-alert {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  margin: 4px 0 14px;
-  background: var(--accent-3);
-  color: var(--accent-11);
-  border: 1.5px solid var(--accent-9);
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.4;
-  animation: auth-alert-pop 180ms ease-out;
-}
-.auth-alert-dot {
-  flex: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--accent-9);
-  color: white;
-  font-weight: 800;
-  font-size: 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-@keyframes auth-alert-pop {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-[data-theme="dark"] .auth-alert {
-  background: rgba(229, 77, 46, 0.12);
-  color: #ffb8a8;
-  border-color: var(--accent-9);
-}
+/* ═══════════════════════════════════════════
+   Login / Register — Split-screen layout
+   Matches the autoparts-v3 HTML prototype
+   ═══════════════════════════════════════════ */
 
 /* ── Full-screen overlay ── */
 .login-overlay {
@@ -133,7 +95,7 @@
   font-weight: 400;
 }
 
-/* Illustration - matches prototype lottie-login sizing */
+/* Illustration — matches prototype lottie-login sizing */
 .login-illustration {
   width: 520px;
   height: 300px;
@@ -226,7 +188,7 @@
   to { transform: translateX(0); opacity: 1; }
 }
 
-/* Tab bar - matches prototype login card inline styles exactly */
+/* Tab bar — matches prototype login card inline styles exactly */
 .login-tab-bar {
   display: flex;
   gap: 2px;
@@ -289,7 +251,7 @@
   margin-bottom: 0;
 }
 
-/* Form inputs inside login card - matches prototype exactly */
+/* Form inputs inside login card — matches prototype exactly */
 .login-form-card .form-group {
   margin-bottom: 18px;
 }
@@ -359,33 +321,16 @@
 }
 
 .login-forgot {
-  background: transparent !important;
-  background-color: transparent !important;
-  border: none !important;
-  padding: 0 !important;
-  height: auto !important;
-  font-family: inherit;
   font-size: 12px;
-  color: var(--accent-9) !important;
+  color: var(--accent-9);
   text-decoration: none;
   font-weight: 600;
   line-height: 16px;
   cursor: pointer;
-  box-shadow: none !important;
-  transform: none !important;
 }
 
 .login-forgot:hover {
   text-decoration: underline;
-  background: transparent !important;
-  background-color: transparent !important;
-  color: var(--accent-11) !important;
-  box-shadow: none !important;
-  transform: none !important;
-}
-.login-forgot:active {
-  transform: none !important;
-  box-shadow: none !important;
 }
 
 /* Submit button */
@@ -484,7 +429,9 @@
   text-decoration: underline;
 }
 
-/* dark mode overrides */
+/* ═══════════════════════════════════════════
+   Dark mode overrides
+   ═══════════════════════════════════════════ */
 [data-theme="dark"] .login-overlay {
   background: linear-gradient(
     160deg,
@@ -548,7 +495,9 @@
   color: var(--neutral-12);
 }
 
-/* responsive - stack on smaller screens */
+/* ═══════════════════════════════════════════
+   Responsive — stack on smaller screens
+   ═══════════════════════════════════════════ */
 @media (max-width: 900px) {
   .login-overlay {
     flex-direction: column;
@@ -612,5 +561,3 @@
     padding: 24px;
   }
 }
-
-/* (login-google-wrap styles removed - we now use the custom .login-social-btn directly) */

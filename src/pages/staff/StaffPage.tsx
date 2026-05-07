@@ -1,13 +1,13 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import api from '../../lib/api';
 import { useThemeStore } from '../../stores/themeStore';
-import Pagination, { type PageInfo } from '../../components/shared/Pagination';
 import './StaffPage.css';
 
+/* ── Types matching backend StaffDto ── */
 interface StaffMember {
   userId: string;
   fullName: string;
@@ -18,6 +18,7 @@ interface StaffMember {
   createdAt: string;
 }
 
+/* ── Schemas ── */
 const addStaffSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
@@ -27,6 +28,7 @@ const addStaffSchema = z.object({
 
 type AddStaffFormData = z.infer<typeof addStaffSchema>;
 
+/* ── Helper: extract error message from ProblemDetails ── */
 function extractError(error: any, fallback: string): string {
   const data = error.response?.data;
   const errors = data?.errors;
@@ -39,6 +41,7 @@ function extractError(error: any, fallback: string): string {
   return fallback;
 }
 
+/* ── Component ── */
 const StaffPage = () => {
   const [staff, setStaff] = useState<StaffMember[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,37 +51,6 @@ const StaffPage = () => {
     member: null,
   });
   const [newRole, setNewRole] = useState<'Admin' | 'Staff'>('Staff');
-
-  const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
-
-  const filtered = useMemo(() => {
-    if (!search.trim()) return staff;
-    const s = search.trim().toLowerCase();
-    return staff.filter((m) =>
-      m.fullName.toLowerCase().includes(s) ||
-      m.email.toLowerCase().includes(s) ||
-      m.role.toLowerCase().includes(s)
-    );
-  }, [staff, search]);
-
-  useEffect(() => { setPage(1); }, [search, pageSize]);
-
-  const totalCount = filtered.length;
-  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
-  const safePage = Math.min(page, totalPages);
-  const start = (safePage - 1) * pageSize;
-  const pageRows = filtered.slice(start, start + pageSize);
-
-  const pageInfo: PageInfo = {
-    page: safePage,
-    pageSize,
-    totalCount,
-    totalPages,
-    hasPrevious: safePage > 1,
-    hasNext: safePage < totalPages,
-  };
   const lottieRef = useRef<HTMLDivElement>(null);
   const { theme } = useThemeStore();
   const isDark = theme === 'dark';
@@ -97,6 +69,7 @@ const StaffPage = () => {
     fetchStaff();
   }, []);
 
+  /* Load Lottie animation */
   useEffect(() => {
     let anim: any;
     const loadLottie = async () => {
@@ -114,6 +87,7 @@ const StaffPage = () => {
     return () => { if (anim) anim.destroy(); };
   }, []);
 
+  /* ── GET /staff ── */
   const fetchStaff = async () => {
     try {
       const response = await api.get('/staff');
@@ -123,6 +97,7 @@ const StaffPage = () => {
     }
   };
 
+  /* ── POST /staff ── */
   const onAddStaff = async (data: AddStaffFormData) => {
     setIsLoading(true);
     try {
@@ -143,6 +118,7 @@ const StaffPage = () => {
     }
   };
 
+  /* ── PATCH /staff/{userId}/toggle-active ── */
   const toggleActive = async (userId: string) => {
     try {
       await api.patch(`/staff/${userId}/toggle-active`);
@@ -153,6 +129,7 @@ const StaffPage = () => {
     }
   };
 
+  /* ── PATCH /staff/{userId}/role ── */
   const updateRole = async () => {
     if (!roleModal.member) return;
     try {
@@ -198,8 +175,8 @@ const StaffPage = () => {
             style={{ maxHeight: 100, width: 'auto' }}
           />
           <div className="insight-card-text">
-            <h4>Active members</h4>
-            <p>{staff.filter((m) => m.isActive).length} of {staff.length} staff are currently active.</p>
+            <h4>Attendance</h4>
+            <p>All team members checked in today — 100% attendance rate</p>
           </div>
         </div>
         <div className="insight-card">
@@ -209,8 +186,8 @@ const StaffPage = () => {
             style={{ maxHeight: 100, width: 'auto' }}
           />
           <div className="insight-card-text">
-            <h4>Role split</h4>
-            <p>{staff.filter((m) => m.role === 'Admin').length} admins, {staff.filter((m) => m.role === 'Staff').length} staff.</p>
+            <h4>Task Allocation</h4>
+            <p>8 active tasks distributed across 3 staff members evenly</p>
           </div>
         </div>
       </div>
@@ -224,12 +201,6 @@ const StaffPage = () => {
       <div className="table-wrap">
         <div className="table-header">
           <div className="table-header-title">Team Members</div>
-          <input
-            className="staff-search"
-            placeholder="Name, email or role…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
         </div>
         {staff.length === 0 ? (
           <div className="empty-state">
@@ -237,64 +208,49 @@ const StaffPage = () => {
             <div className="sub">Add your first staff member to get started.</div>
           </div>
         ) : (
-          <>
-            <table>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Role</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {staff.map((member) => (
+                <tr key={member.userId}>
+                  <td>{member.fullName}</td>
+                  <td>{member.role === 'Admin' ? 'Administrator' : 'Staff'}</td>
+                  <td>{member.email}</td>
+                  <td>{member.phone || '—'}</td>
+                  <td>
+                    <span className={`badge ${member.isActive ? 'badge-success' : 'badge-error'}`}>
+                      {member.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="action-buttons">
+                      <button
+                        className="btn btn-sm btn-outline"
+                        onClick={() => toggleActive(member.userId)}
+                      >
+                        {member.isActive ? 'Deactivate' : 'Activate'}
+                      </button>
+                      <button
+                        className="btn btn-sm btn-outline"
+                        onClick={() => openRoleModal(member)}
+                      >
+                        Change Role
+                      </button>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {pageRows.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} style={{ textAlign: 'center', padding: 36, color: 'var(--neutral-9)', fontStyle: 'italic' }}>
-                      No staff match this filter.
-                    </td>
-                  </tr>
-                ) : (
-                  pageRows.map((member) => (
-                    <tr key={member.userId}>
-                      <td>{member.fullName}</td>
-                      <td>{member.role === 'Admin' ? 'Administrator' : 'Staff'}</td>
-                      <td>{member.email}</td>
-                      <td>{member.phone || '-'}</td>
-                      <td>
-                        <span className={`badge ${member.isActive ? 'badge-success' : 'badge-error'}`}>
-                          {member.isActive ? 'Active' : 'Inactive'}
-                        </span>
-                      </td>
-                      <td>
-                        <div className="action-buttons">
-                          <button
-                            className="btn btn-sm btn-outline"
-                            onClick={() => toggleActive(member.userId)}
-                          >
-                            {member.isActive ? 'Deactivate' : 'Activate'}
-                          </button>
-                          <button
-                            className="btn btn-sm btn-outline"
-                            onClick={() => openRoleModal(member)}
-                          >
-                            Change Role
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-            <Pagination
-              meta={pageInfo}
-              onPageChange={setPage}
-              onPageSizeChange={(s) => { setPageSize(s); setPage(1); }}
-            />
-          </>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
 
@@ -314,13 +270,13 @@ const StaffPage = () => {
               <div className="modal-body">
                 <div className="form-group">
                   <label className="form-label">Full Name</label>
-                  <input className="form-input" type="text" placeholder="Staff member's full name" {...register('fullName')} />
+                  <input className="form-input" type="text" placeholder="John Doe" {...register('fullName')} />
                   {errors.fullName && <span className="form-error">{errors.fullName.message}</span>}
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">Email</label>
-                  <input className="form-input" type="email" placeholder="Work email address" {...register('email')} />
+                  <input className="form-input" type="email" placeholder="john@autoparts.com" {...register('email')} />
                   {errors.email && <span className="form-error">{errors.email.message}</span>}
                 </div>
 
