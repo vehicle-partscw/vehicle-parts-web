@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.local
 
 # Editor directories and files
 .vscode/*
@@ -22,3 +24,21 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# local-only asset files (kept out of git, deployed via vercel cli)
+/public/illust-*.svg
+!/public/illust-analysing-*.svg
+!/public/illust-checking-*.svg
+!/public/illust-logo-light.svg
+!/public/illust-navigating-*.svg
+!/public/illust-process-*.svg
+
+/public/lottie-*.json
+!/public/lottie-dashboard.json
+!/public/lottie-login.json
+!/public/lottie-message-sent-admin.json
+!/public/lottie-message-sent-customer.json
+!/public/lottie-notifications-empty.json
+!/public/lottie-team.json
+
+.vercel
