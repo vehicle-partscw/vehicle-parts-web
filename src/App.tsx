@@ -4,46 +4,57 @@ import { Toaster } from 'sonner';
 import { useThemeStore } from './stores/themeStore';
 import { useAuthStore } from './stores/authStore';
 
-// Layout
 import AppLayout from './components/layout/AppLayout';
 
-// Pages
 import LoginPage from './pages/auth/LoginPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import StaffPage from './pages/staff/StaffPage';
-import ComingSoonPage from './pages/ComingSoonPage';
+import VendorsPage from './pages/vendors/VendorsPage';
+import InventoryPage from './pages/inventory/InventoryPage';
+import PurchasesPage from './pages/purchases/PurchasesPage';
+import SalesPage from './pages/sales/SalesPage';
+import AppointmentsPage from './pages/appointments/AppointmentsPage';
+import CustomersPage from './pages/customers/CustomersPage';
+import PartRequestsPage from './pages/part-requests/PartRequestsPage';
+import ReviewsPage from './pages/reviews/ReviewsPage';
+import MyHistoryPage from './pages/my-history/MyHistoryPage';
+import ReportsPage from './pages/reports/ReportsPage';
+import CustomerReportsPage from './pages/customer-reports/CustomerReportsPage';
+import ProfilePage from './pages/profile/ProfilePage';
 
-// Protected Route Component
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { isAuthenticated } = useAuthStore();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
   return <>{children}</>;
 };
 
-// Admin Only Route Component
+const CustomerRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, user } = useAuthStore();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (user?.role !== 'Customer') return <Navigate to="/dashboard" replace />;
+  return <>{children}</>;
+};
+
 interface AdminRouteProps {
   children: React.ReactNode;
 }
 
 const AdminRoute = ({ children }: AdminRouteProps) => {
   const { isAuthenticated, user } = useAuthStore();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (user?.role !== 'Admin') return <Navigate to="/dashboard" replace />;
+  return <>{children}</>;
+};
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (user?.role !== 'Admin') {
-    return <Navigate to="/dashboard" replace />;
-  }
-
+// Staff or Admin (i.e. anyone except Customer)
+const StaffRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, user } = useAuthStore();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (user?.role !== 'Admin' && user?.role !== 'Staff') return <Navigate to="/dashboard" replace />;
   return <>{children}</>;
 };
 
@@ -67,11 +78,9 @@ function App() {
       />
 
       <Routes>
-        {/* Auth Routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<Navigate to="/login" replace />} />
 
-        {/* Protected App Routes */}
         <Route
           path="/"
           element={
@@ -105,59 +114,58 @@ function App() {
           }
         />
 
-        {/* Coming Soon Routes */}
         <Route
           path="/inventory"
           element={
-            <ProtectedRoute>
+            <StaffRoute>
               <AppLayout>
-                <ComingSoonPage />
+                <InventoryPage />
               </AppLayout>
-            </ProtectedRoute>
+            </StaffRoute>
           }
         />
 
         <Route
           path="/sales"
           element={
-            <ProtectedRoute>
+            <StaffRoute>
               <AppLayout>
-                <ComingSoonPage />
+                <SalesPage />
               </AppLayout>
-            </ProtectedRoute>
+            </StaffRoute>
           }
         />
 
         <Route
           path="/purchases"
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <AppLayout>
-                <ComingSoonPage />
+                <PurchasesPage />
               </AppLayout>
-            </ProtectedRoute>
+            </AdminRoute>
           }
         />
 
         <Route
           path="/customers"
           element={
-            <ProtectedRoute>
+            <StaffRoute>
               <AppLayout>
-                <ComingSoonPage />
+                <CustomersPage />
               </AppLayout>
-            </ProtectedRoute>
+            </StaffRoute>
           }
         />
 
         <Route
           path="/vendors"
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <AppLayout>
-                <ComingSoonPage />
+                <VendorsPage />
               </AppLayout>
-            </ProtectedRoute>
+            </AdminRoute>
           }
         />
 
@@ -166,7 +174,7 @@ function App() {
           element={
             <ProtectedRoute>
               <AppLayout>
-                <ComingSoonPage />
+                <AppointmentsPage />
               </AppLayout>
             </ProtectedRoute>
           }
@@ -177,7 +185,7 @@ function App() {
           element={
             <ProtectedRoute>
               <AppLayout>
-                <ComingSoonPage />
+                <ReviewsPage />
               </AppLayout>
             </ProtectedRoute>
           }
@@ -188,7 +196,7 @@ function App() {
           element={
             <ProtectedRoute>
               <AppLayout>
-                <ComingSoonPage />
+                <PartRequestsPage />
               </AppLayout>
             </ProtectedRoute>
           }
@@ -197,11 +205,33 @@ function App() {
         <Route
           path="/reports"
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <AppLayout>
-                <ComingSoonPage />
+                <ReportsPage />
               </AppLayout>
-            </ProtectedRoute>
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/my-history"
+          element={
+            <CustomerRoute>
+              <AppLayout>
+                <MyHistoryPage />
+              </AppLayout>
+            </CustomerRoute>
+          }
+        />
+
+        <Route
+          path="/customer-reports"
+          element={
+            <StaffRoute>
+              <AppLayout>
+                <CustomerReportsPage />
+              </AppLayout>
+            </StaffRoute>
           }
         />
 
@@ -210,13 +240,23 @@ function App() {
           element={
             <ProtectedRoute>
               <AppLayout>
-                <ComingSoonPage />
+                <ProfilePage />
               </AppLayout>
             </ProtectedRoute>
           }
         />
 
-        {/* Catch all - redirect to dashboard if authenticated, login if not */}
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <ProfilePage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="*"
           element={
