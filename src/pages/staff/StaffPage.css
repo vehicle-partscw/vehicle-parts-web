@@ -1,4 +1,4 @@
-/* ═══════ STAFF PAGE — Matches autoparts-v3.html prototype exactly ═══════ */
+/* staff page - matches autoparts-v3.html prototype exactly */
 
 .staff-page {
   width: 100%;
@@ -257,7 +257,7 @@
   font-weight: 400;
 }
 
-/* Forms in modal — matching prototype exactly */
+/* Forms in modal - matching prototype exactly */
 .form-group {
   margin-bottom: 18px;
 }
@@ -303,7 +303,7 @@
   display: block;
 }
 
-/* Modal — matching prototype exactly */
+/* Modal - matching prototype exactly */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -407,4 +407,25 @@
 [data-theme="dark"] .modal {
   background: var(--neutral-1);
   border-color: var(--accent-8);
+}
+
+/* search input added with pagination wiring */
+.staff-page .staff-search {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 13px;
+  border: 2px solid var(--neutral-5);
+  border-radius: 10px;
+  background: var(--neutral-1);
+  color: var(--neutral-12);
+  font-family: inherit;
+  width: 240px;
+  margin-left: auto;
+}
+.staff-page .staff-search:focus { border-color: var(--accent-9); outline: none; }
+.staff-page .table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
 }

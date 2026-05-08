@@ -1,17 +1,41 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
 
+// VITE_API_BASE_URL is set in the deployed environment (Vercel) and falls back to localhost for dev
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000/api/v1').replace(/\/+$/, '');
+
 const api: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:5000/api/v1',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request interceptor: attach JWT from localStorage
+// Tokens may live in either localStorage (Remember me ON) or sessionStorage (OFF).
+// Always check sessionStorage first, then fall back to localStorage.
+function readToken(key: string): string | null {
+  if (typeof window === 'undefined') return null;
+  return sessionStorage.getItem(key) ?? localStorage.getItem(key);
+}
+function writeAccessToken(token: string) {
+  // write back to whichever store currently holds the refresh token
+  const target = sessionStorage.getItem('refreshToken') ? sessionStorage : localStorage;
+  target.setItem('accessToken', token);
+}
+function clearTokens() {
+  ['localStorage', 'sessionStorage'].forEach((s) => {
+    const store = s === 'localStorage' ? localStorage : sessionStorage;
+    store.removeItem('accessToken');
+    store.removeItem('refreshToken');
+    store.removeItem('authUser');
+    store.removeItem('authPersistent');
+  });
+}
+
+// Request interceptor: attach JWT
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken');
+    const token = readToken('accessToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -20,38 +44,34 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor: handle 401 errors
+// Response interceptor: handle 401 errors with refresh-token flow
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // If 401 and we haven't already tried to refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        const refreshToken = localStorage.getItem('refreshToken');
+        const refreshToken = readToken('refreshToken');
         if (!refreshToken) {
           throw new Error('No refresh token available');
         }
 
         const response = await axios.post(
-          'http://localhost:5000/api/v1/auth/refresh',
+          `${API_BASE_URL}/auth/refresh`,
           { refreshToken },
           { headers: { 'Content-Type': 'application/json' } }
         );
 
         const { accessToken } = response.data;
-        localStorage.setItem('accessToken', accessToken);
+        writeAccessToken(accessToken);
 
-        // Retry original request with new token
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return api(originalRequest);
       } catch (_refreshError) {
-        // Refresh failed, clear auth and redirect to login
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+        clearTokens();
         window.location.href = '/login';
         return Promise.reject(error);
       }

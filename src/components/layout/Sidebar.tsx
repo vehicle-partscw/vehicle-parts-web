@@ -3,7 +3,6 @@ import { useAuthStore } from '../../stores/authStore';
 import logo from '../../assets/logo.svg';
 import './Sidebar.css';
 
-/* ── SVG Icons matching the prototype exactly (stroke-based, 24x24) ── */
 const icons: Record<string, JSX.Element> = {
   dashboard: (
     <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
@@ -41,6 +40,9 @@ const icons: Record<string, JSX.Element> = {
   settings: (
     <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
   ),
+  history: (
+    <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 10 9 10"/><polyline points="12 7 12 12 15.5 14"/></svg>
+  ),
 };
 
 interface NavItem {
@@ -63,12 +65,14 @@ const Sidebar = () => {
 
   const isAdmin = userRole === 'Admin';
   const isStaff = userRole === 'Staff' || isAdmin;
+  const isCustomer = userRole === 'Customer';
 
   const sections: NavSection[] = [
     {
       sectionLabel: 'Main',
       items: [
         { label: 'Dashboard', path: '/dashboard', icon: 'dashboard', show: true },
+        { label: 'My History', path: '/my-history', icon: 'history', show: isCustomer },
         { label: 'Inventory', path: '/inventory', icon: 'inventory', show: isStaff },
         { label: 'Sales', path: '/sales', icon: 'sales', show: isStaff },
         { label: 'Purchases', path: '/purchases', icon: 'purchases', show: isStaff },
@@ -88,13 +92,14 @@ const Sidebar = () => {
         { label: 'Appointments', path: '/appointments', icon: 'appointments', show: true },
         { label: 'Reviews', path: '/reviews', icon: 'reviews', show: true },
         { label: 'Part Requests', path: '/part-requests', icon: 'requests', show: true },
-        { label: 'Reports', path: '/reports', icon: 'reports', show: isStaff },
+        { label: 'Reports', path: '/reports', icon: 'reports', show: isAdmin },
+        { label: 'Customer Reports', path: '/customer-reports', icon: 'reports', show: isStaff },
       ],
     },
     {
       sectionLabel: 'System',
       items: [
-        { label: 'Settings', path: '/settings', icon: 'settings', show: true },
+        { label: isCustomer ? 'My Profile' : 'Settings', path: '/settings', icon: 'settings', show: true },
       ],
     },
   ];
@@ -143,7 +148,11 @@ const Sidebar = () => {
 
       {/* Footer */}
       <div className="sidebar-footer">
-        <div className="sidebar-user" onClick={handleLogout} title="Click to logout">
+        <div
+          className="sidebar-user"
+          onClick={() => navigate('/settings')}
+          title="Open profile and settings"
+        >
           <div className="sidebar-avatar">
             {user?.fullName ? user.fullName[0].toUpperCase() : 'U'}
           </div>
