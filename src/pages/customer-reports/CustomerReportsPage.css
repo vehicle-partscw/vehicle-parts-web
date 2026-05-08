@@ -1,0 +1,205 @@
+.customer-reports-page { width: 100%; max-width: 1100px; }
+
+.customer-reports-page .filter-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin: 8px 0 24px;
+  flex-wrap: wrap;
+}
+
+/* type toggle (3 tabs) */
+.customer-reports-page .type-toggle {
+  display: inline-flex;
+  background: var(--neutral-2);
+  border: 2px solid var(--neutral-12);
+  border-radius: 12px;
+  padding: 4px;
+  box-shadow: var(--shadow-sm);
+}
+.customer-reports-page .type-btn {
+  border: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 8px 18px !important;
+  height: auto !important;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--neutral-11);
+  cursor: pointer;
+  border-radius: 8px;
+  font-family: inherit;
+  transition: background 120ms ease, color 120ms ease;
+  white-space: nowrap;
+  box-shadow: none !important;
+  transform: none !important;
+}
+.customer-reports-page .type-btn:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+.customer-reports-page .type-btn:active {
+  transform: none !important;
+  box-shadow: none !important;
+}
+.customer-reports-page .type-btn.active {
+  background: var(--accent-9) !important;
+  background-color: var(--accent-9) !important;
+  color: white;
+}
+.customer-reports-page .type-btn:hover:not(.active) {
+  background: var(--neutral-3) !important;
+  background-color: var(--neutral-3) !important;
+}
+
+/* date pickers */
+.customer-reports-page .date-range {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+.customer-reports-page .date-range label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--neutral-11);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.customer-reports-page .date-range input {
+  height: 40px;
+  padding: 0 12px;
+  font-size: 13px;
+  border: 2px solid var(--neutral-5);
+  border-radius: 12px;
+  background-color: var(--neutral-1);
+  color: var(--neutral-12);
+  font-family: inherit;
+}
+.customer-reports-page .date-range input:focus { border-color: var(--accent-9); outline: none; }
+.customer-reports-page .apply-btn {
+  height: 40px;
+  padding: 0 22px;
+  border: 2px solid var(--neutral-12);
+  border-radius: 12px;
+  background: var(--accent-9);
+  color: white;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: var(--shadow-sm);
+  transition: transform 120ms ease;
+}
+.customer-reports-page .apply-btn:hover { transform: translate(-2px, -2px); }
+.customer-reports-page .apply-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+/* table-header meta - match the global pattern used on sales / purchases / vendors */
+.customer-reports-page .table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.customer-reports-page .table-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.customer-reports-page .table-header-meta {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--neutral-9);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* primary action button (e.g. "Send reminders" on the overdue tab) */
+.customer-reports-page .btn-primary {
+  border: 2px solid var(--neutral-12);
+  background: var(--accent-9);
+  color: white;
+  box-shadow: var(--shadow-sm);
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.08s ease;
+}
+.customer-reports-page .btn-primary:hover { transform: translate(-2px, -2px); }
+.customer-reports-page .btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* table cells */
+.customer-reports-page td.mono {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 12px;
+}
+.customer-reports-page td.strong { font-weight: 700; color: var(--neutral-12); }
+.customer-reports-page td.muted { color: var(--neutral-9); font-size: 12px; }
+.customer-reports-page td.empty {
+  text-align: center;
+  color: var(--neutral-9);
+  padding: 36px 16px;
+  font-size: 13px;
+}
+
+/* rank cell */
+.customer-reports-page .rank-cell { width: 60px; }
+.customer-reports-page .rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--neutral-3);
+  color: var(--neutral-11);
+  font-size: 12px;
+  font-weight: 700;
+  border: 1.5px solid var(--neutral-5);
+}
+.customer-reports-page .rank.top {
+  background: var(--accent-9);
+  color: white;
+  border-color: var(--accent-12);
+  box-shadow: var(--shadow-sm);
+}
+
+/* customer cell with avatar */
+.customer-reports-page .customer-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.customer-reports-page .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--accent-9);
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  border: 2px solid var(--accent-12);
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+.customer-reports-page .customer-name {
+  font-weight: 600;
+  color: var(--neutral-12);
+  font-size: 13px;
+}
