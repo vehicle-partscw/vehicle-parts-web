@@ -1,4 +1,4 @@
-/* ═══════ STAFF PAGE — Matches autoparts-v3.html prototype exactly ═══════ */
+/* staff page - matches autoparts-v3.html prototype exactly */
 
 .staff-page {
   width: 100%;
@@ -257,7 +257,7 @@
   font-weight: 400;
 }
 
-/* Forms in modal — matching prototype exactly */
+/* Forms in modal - matching prototype exactly */
 .form-group {
   margin-bottom: 18px;
 }
@@ -303,7 +303,7 @@
   display: block;
 }
 
-/* Modal — matching prototype exactly */
+/* Modal - matching prototype exactly */
 .modal-overlay {
   display: none;
   position: fixed;

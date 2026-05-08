@@ -262,7 +262,7 @@ const StaffPage = () => {
                       <td>{member.fullName}</td>
                       <td>{member.role === 'Admin' ? 'Administrator' : 'Staff'}</td>
                       <td>{member.email}</td>
-                      <td>{member.phone || '—'}</td>
+                      <td>{member.phone || '-'}</td>
                       <td>
                         <span className={`badge ${member.isActive ? 'badge-success' : 'badge-error'}`}>
                           {member.isActive ? 'Active' : 'Inactive'}

@@ -111,7 +111,7 @@ const DashboardPage = () => {
         recentSales: sales.data.items.slice(0, 5),
       });
     } catch {
-      // fall through silently — show empty state
+      // fall through silently - show empty state
     }
   };
 
@@ -207,23 +207,23 @@ const DashboardPage = () => {
         <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
           <div className="stat-card accent-pop">
             <div className="stat-label">Total Parts</div>
-            <div className="stat-value">{staffStats?.totalParts ?? '—'}</div>
+            <div className="stat-value">{staffStats?.totalParts ?? '-'}</div>
             <div className="stat-change">{staffStats ? `${staffStats.totalParts - staffStats.lowStockCount} healthy` : ''}</div>
           </div>
           <div className="stat-card">
             <div className="stat-label">Today's Invoices</div>
-            <div className="stat-value">{staffStats?.todayInvoices ?? '—'}</div>
+            <div className="stat-value">{staffStats?.todayInvoices ?? '-'}</div>
             <div className="stat-change" style={{ color: 'var(--success)' }}>Logged today</div>
           </div>
           <div className="stat-card">
             <div className="stat-label">This Month Sales</div>
-            <div className="stat-value">{staffStats ? fmtMoney(staffStats.monthRevenue) : '—'}</div>
+            <div className="stat-value">{staffStats ? fmtMoney(staffStats.monthRevenue) : '-'}</div>
             <div className="stat-change" style={{ color: 'var(--success)' }}>Calendar month</div>
           </div>
           <div className="stat-card">
             <div className="stat-label">Low Stock Items</div>
             <div className="stat-value" style={{ color: (staffStats?.lowStockCount ?? 0) > 0 ? 'var(--accent-9)' : 'var(--success)' }}>
-              {staffStats?.lowStockCount ?? '—'}
+              {staffStats?.lowStockCount ?? '-'}
             </div>
             <div className="stat-change" style={{ color: (staffStats?.lowStockCount ?? 0) > 0 ? 'var(--accent-9)' : 'var(--success)' }}>
               {(staffStats?.lowStockCount ?? 0) > 0 ? 'Needs attention' : 'All healthy'}
@@ -234,22 +234,22 @@ const DashboardPage = () => {
         <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
           <div className="stat-card accent-pop">
             <div className="stat-label">Lifetime spend</div>
-            <div className="stat-value">{customerStats ? fmtMoney(customerStats.lifetimeSpend) : '—'}</div>
+            <div className="stat-value">{customerStats ? fmtMoney(customerStats.lifetimeSpend) : '-'}</div>
             <div className="stat-change">All invoices</div>
           </div>
           <div className="stat-card">
             <div className="stat-label">My Appointments</div>
-            <div className="stat-value">{customerStats?.upcoming ?? '—'}</div>
+            <div className="stat-value">{customerStats?.upcoming ?? '-'}</div>
             <div className="stat-change">Upcoming</div>
           </div>
           <div className="stat-card">
             <div className="stat-label">My Reviews</div>
-            <div className="stat-value">{customerStats?.myReviewsCount ?? '—'}</div>
+            <div className="stat-value">{customerStats?.myReviewsCount ?? '-'}</div>
             <div className="stat-change" style={{ color: 'var(--success)' }}>Total written</div>
           </div>
           <div className="stat-card">
             <div className="stat-label">Part Requests</div>
-            <div className="stat-value">{customerStats?.pendingRequests ?? '—'}</div>
+            <div className="stat-value">{customerStats?.pendingRequests ?? '-'}</div>
             <div className="stat-change" style={{ color: (customerStats?.pendingRequests ?? 0) > 0 ? 'var(--accent-9)' : 'var(--neutral-9)' }}>
               {(customerStats?.pendingRequests ?? 0) > 0 ? 'Pending' : 'None pending'}
             </div>
